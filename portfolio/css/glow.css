@@ -1,0 +1,148 @@
+/* ===========================
+   GLOW LAYER
+   Cursor-follow ambient glow + glowing hover borders.
+   Dark sections only — keeps light (paper) sections clean and readable.
+=========================== */
+
+/* Cursor-follow glow: a soft radial light that tracks the pointer,
+   rendered as a fixed full-viewport layer behind content. */
+.cursor-glow {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+  background: radial-gradient(
+    600px circle at var(--gx, 50%) var(--gy, 50%),
+    rgba(232, 163, 61, 0.10),
+    rgba(124, 152, 133, 0.05) 40%,
+    transparent 70%
+  );
+}
+.cursor-glow.active { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-glow { display: none; }
+}
+@media (max-width: 760px) {
+  .cursor-glow { display: none; } /* no hover on touch devices */
+}
+
+/* Ambient glow orbs — fixed, slow-drifting light sources behind dark sections.
+   Pure CSS, no JS needed, very low opacity so it reads as atmosphere not decoration. */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+.glow-orb.amber {
+  background: radial-gradient(circle, rgba(232, 163, 61, 0.35), transparent 70%);
+  width: 480px; height: 480px;
+}
+.glow-orb.sage {
+  background: radial-gradient(circle, rgba(124, 152, 133, 0.28), transparent 70%);
+  width: 420px; height: 420px;
+}
+
+.hero .glow-orb.amber { top: -120px; right: -80px; animation: drift1 16s ease-in-out infinite; }
+.hero .glow-orb.sage { bottom: -140px; left: -100px; animation: drift2 20s ease-in-out infinite; }
+
+@keyframes drift1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-30px, 40px) scale(1.08); }
+}
+@keyframes drift2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -30px) scale(1.1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow-orb { animation: none !important; }
+}
+
+/* Glowing borders on hover — interactive elements get a soft amber halo
+   instead of a flat color change. Applied to cards, chips, and the terminal. */
+.glow-hover {
+  position: relative;
+  transition: box-shadow 0.35s var(--ease), border-color 0.35s var(--ease), transform 0.35s var(--ease);
+}
+.glow-hover:hover {
+  border-color: rgba(232, 163, 61, 0.55) !important;
+  box-shadow:
+    0 0 0 1px rgba(232, 163, 61, 0.25),
+    0 0 28px rgba(232, 163, 61, 0.22),
+    0 18px 40px -16px rgba(0,0,0,0.5);
+  transform: translateY(-3px);
+}
+
+/* Terminal card gets a permanent soft glow + brighter on hover */
+.hero-terminal {
+  box-shadow:
+    0 0 50px rgba(232, 163, 61, 0.10),
+    0 30px 60px -20px rgba(0,0,0,0.5);
+  transition: box-shadow 0.4s var(--ease);
+}
+.hero-terminal:hover {
+  box-shadow:
+    0 0 70px rgba(232, 163, 61, 0.20),
+    0 0 0 1px rgba(232, 163, 61, 0.3),
+    0 30px 60px -20px rgba(0,0,0,0.5);
+}
+
+/* Chip glow on hover (skills section) */
+.chip {
+  transition: border-color 0.25s var(--ease), color 0.25s var(--ease), background 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.chip:hover {
+  box-shadow: 0 0 16px rgba(232, 163, 61, 0.25);
+}
+
+/* CTA buttons get a glow pulse on hover */
+.btn-primary {
+  transition: transform 0.25s var(--ease), background 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.btn-primary:hover {
+  box-shadow: 0 0 24px rgba(232, 163, 61, 0.45);
+}
+.nav-cta:hover {
+  box-shadow: 0 0 18px rgba(232, 163, 61, 0.4);
+}
+
+/* Project card border glow on hover (dark sections use this variant) */
+.project-visual {
+  transition: box-shadow 0.35s var(--ease), border-color 0.35s var(--ease);
+}
+.project-card:hover .project-visual {
+  border-color: rgba(232, 163, 61, 0.4);
+  box-shadow: 0 0 24px rgba(232, 163, 61, 0.15);
+}
+
+/* Timeline dot glow */
+.timeline-item::before {
+  box-shadow: 0 0 0 0 rgba(232, 163, 61, 0.4);
+  transition: box-shadow 0.3s var(--ease);
+}
+.timeline-item:hover::before {
+  box-shadow: 0 0 14px 2px rgba(232, 163, 61, 0.5);
+}
+
+/* Play cards (playground) + compare cards (process) glow on hover */
+.play-card, .compare-card {
+  transition: box-shadow 0.35s var(--ease), border-color 0.35s var(--ease);
+}
+.play-card:hover, .compare-card:hover {
+  border-color: rgba(232, 163, 61, 0.4);
+  box-shadow: 0 0 30px rgba(232, 163, 61, 0.12);
+}
+
+/* Swatch glow */
+.swatch {
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.swatch:hover {
+  box-shadow: 0 0 20px rgba(0,0,0,0.3), 0 0 0 2px rgba(232, 163, 61, 0.4);
+}

@@ -1,0 +1,210 @@
+/* ===========================
+   MOTION LAYER
+   Staggered reveals, parallax, micro-interactions, page transitions.
+=========================== */
+
+/* Page-load fade-in for the whole document */
+body {
+  animation: pageFadeIn 0.6s var(--ease);
+}
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Staggered children reveal — applied via JS data-stagger-index */
+.reveal {
+  transition-delay: var(--stagger-delay, 0s);
+}
+
+/* Hero text entrance (separate from scroll-reveal — plays once on load) */
+.hero-kicker, .hero-title, .hero-desc, .hero-actions, .hero-stats {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: heroRise 0.8s var(--ease) forwards;
+}
+.hero-kicker { animation-delay: 0.05s; }
+.hero-title { animation-delay: 0.15s; }
+.hero-desc { animation-delay: 0.32s; }
+.hero-actions { animation-delay: 0.46s; }
+.hero-stats { animation-delay: 0.58s; }
+
+.hero-terminal {
+  opacity: 0;
+  transform: translateY(24px) scale(0.98);
+  animation: terminalRise 0.9s var(--ease) forwards;
+  animation-delay: 0.35s;
+}
+
+@keyframes heroRise {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes terminalRise {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body { animation: none; }
+  .hero-kicker, .hero-title, .hero-desc, .hero-actions, .hero-stats, .hero-terminal {
+    opacity: 1; transform: none; animation: none;
+  }
+}
+
+/* Terminal typing cursor already exists; add a subtle line-by-line type-in feel.
+   Each direct child of .term-body fades in sequentially regardless of class. */
+.term-body > * {
+  opacity: 0;
+  animation: lineIn 0.4s var(--ease) forwards;
+}
+.term-body > *:nth-child(1) { animation-delay: 0.9s; }
+.term-body > *:nth-child(2) { animation-delay: 1.05s; }
+.term-body > *:nth-child(3) { animation-delay: 1.25s; }
+.term-body > *:nth-child(4) { animation-delay: 1.4s; }
+.term-body > *:nth-child(5) { animation-delay: 1.52s; }
+.term-body > *:nth-child(6) { animation-delay: 1.64s; }
+.term-body > *:nth-child(7) { animation-delay: 1.76s; }
+.term-body > *:nth-child(8) { animation-delay: 1.95s; }
+.term-body > *:nth-child(9) { animation-delay: 2.1s; }
+
+@keyframes lineIn {
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .term-body > * { opacity: 1; animation: none; }
+}
+
+/* Nav underline sweep on active/hover already exists; add nav entrance */
+.nav {
+  animation: navDrop 0.5s var(--ease) forwards;
+}
+@keyframes navDrop {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+/* Section headings: subtle letter-spacing pull-in on reveal */
+.section-title.reveal,
+h2.reveal {
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+
+/* Skill chips: pop-in stagger when skills section reveals */
+.skill-chips .chip {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.skills-stack.is-visible .chip {
+  animation: chipPop 0.5s var(--ease) forwards;
+}
+.skills-stack.is-visible .skill-row:nth-child(1) .chip { animation-delay: 0.05s; }
+.skills-stack.is-visible .skill-row:nth-child(2) .chip { animation-delay: 0.12s; }
+.skills-stack.is-visible .skill-row:nth-child(3) .chip { animation-delay: 0.19s; }
+.skills-stack.is-visible .skill-row:nth-child(4) .chip { animation-delay: 0.26s; }
+.skills-stack.is-visible .skill-row:nth-child(5) .chip { animation-delay: 0.33s; }
+.skills-stack.is-visible .skill-row:nth-child(6) .chip { animation-delay: 0.40s; }
+.skills-stack.is-visible .skill-row:nth-child(7) .chip { animation-delay: 0.47s; }
+
+@keyframes chipPop {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill-chips .chip { opacity: 1; transform: none; animation: none; }
+}
+
+/* Project cards: alternating slide-in direction for visual rhythm */
+.project-card.reveal {
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.project-card.reveal:nth-child(odd) { transform: translateX(-24px); opacity: 0; }
+.project-card.reveal:nth-child(even) { transform: translateX(24px); opacity: 0; }
+.project-card.reveal.is-visible { transform: translateX(0) translateY(0); opacity: 1; }
+
+@media (max-width: 880px) {
+  .project-card.reveal:nth-child(odd),
+  .project-card.reveal:nth-child(even) {
+    transform: translateY(20px);
+  }
+}
+
+/* Cert summary cards: pop + lift entrance */
+.cert-summary-card.reveal {
+  transition: opacity 0.55s var(--ease), transform 0.55s var(--ease);
+  transform: translateY(20px) scale(0.97);
+  opacity: 0;
+}
+.cert-summary-card.reveal.is-visible { transform: translateY(0) scale(1); opacity: 1; }
+.cert-summary-grid .cert-summary-card:nth-child(1) { transition-delay: 0s; }
+.cert-summary-grid .cert-summary-card:nth-child(2) { transition-delay: 0.08s; }
+.cert-summary-grid .cert-summary-card:nth-child(3) { transition-delay: 0.16s; }
+.cert-summary-grid .cert-summary-card:nth-child(4) { transition-delay: 0.24s; }
+
+/* Cert detail grid: cascade-in when opened */
+.cert-detail.open .cert-card {
+  animation: cardCascade 0.45s var(--ease) backwards;
+}
+.cert-detail.open .cert-card:nth-child(1) { animation-delay: 0.02s; }
+.cert-detail.open .cert-card:nth-child(2) { animation-delay: 0.05s; }
+.cert-detail.open .cert-card:nth-child(3) { animation-delay: 0.08s; }
+.cert-detail.open .cert-card:nth-child(4) { animation-delay: 0.11s; }
+.cert-detail.open .cert-card:nth-child(5) { animation-delay: 0.14s; }
+.cert-detail.open .cert-card:nth-child(6) { animation-delay: 0.17s; }
+.cert-detail.open .cert-card:nth-child(n+7) { animation-delay: 0.2s; }
+
+@keyframes cardCascade {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card.reveal, .cert-summary-card.reveal, .cert-detail.open .cert-card {
+    transform: none !important; opacity: 1 !important; animation: none !important;
+  }
+}
+
+/* Timeline items: grow-in dot + slide content */
+.timeline-item.reveal {
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+  transform: translateX(-16px);
+  opacity: 0;
+}
+.timeline-item.reveal.is-visible { transform: translateX(0); opacity: 1; }
+.timeline-item::before {
+  transform: scale(0);
+  transition: transform 0.4s var(--ease) 0.2s;
+}
+.timeline-item.is-visible::before { transform: scale(1); }
+
+/* Buttons: subtle press feedback */
+.btn:active, .nav-cta:active, .palette-btn:active, .calc-add:active { transform: scale(0.97); }
+
+/* Number counters: gentle pop when they finish (handled via JS adding .counted) */
+.cs-count, .hero-stat .num { transition: color 0.3s var(--ease); }
+
+/* Smooth section background transitions already exist via reveal; add scroll-snap-friendly easing on cert detail open */
+.cert-detail { transition: max-height 0.6s var(--ease); }
+
+/* Active nav link gets a small glowing dot instead of plain underline (extra flair) */
+.nav-links a.active::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 4px; height: 4px;
+  background: var(--amber);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 8px rgba(232, 163, 61, 0.7);
+}
+
+/* Scroll progress bar at very top of viewport */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--amber), var(--sage));
+  z-index: 200;
+  width: 0%;
+  transition: width 0.1s linear;
+}
